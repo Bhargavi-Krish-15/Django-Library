@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+    <form method="post">
+    <h2>Are you sure you want to delete "{{ view.object }}"?</h2>
+        {% comment %} csrf token for security {% endcomment %}
+    {% csrf_token %}
+    <button type="submit">Confirm Delete</button>
+  </form>
+  <a href="{% url 'book_list' %}">Cancel</a>
+{% endblock content %}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}All Books{% endblock %}
+{% block content %}
+    <h1>Library - Book List</h1>
+    ➕ <a href="{% url 'book_add' %}"> Add Book</a>
+    <ul>
+        {% for book in books %}
+            <li>
+                {% comment %} <a href="{% url 'book_detail' book.pk %}">
+                     {{ book.title }}
+                </a> {% endcomment %}
+                <a href="{{book.get_absolute_url}}">{{book.title}}</a>
+                :
+                {% for author in book.authors.all %}
+                    {{ author.first_name.capitalize }} {{ author.last_name.capitalize }}
+                {% endfor %}
+                - ({{ book.publish_date }})   
+                <a href="{% url 'book_edit' book.slug %}">Edit</a> 
+                | 
+                <a href="{% url 'book_delete' book.slug %}">Delete</a> 
+            </li>
+        {% empty %}
+            <li>No books available.</li>
+        {% endfor %}
+    </ul>
+    {% comment %} pagination command will work only when they are initialized in class based view{% endcomment %}
+    <div>
+        {% if is_paginated %}
+            {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}">Previous</a>{% endif %}
+            <span> Page {{page_obj.number}} of {{page_obj.paginator.num_pages}}</span>
+            {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">Next</a>{% endif %}
+        {% endif %}
+    </div>
+{% endblock %}

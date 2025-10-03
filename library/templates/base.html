@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Library{% endblock %}</title>
+</head>
+<body>
+    <h1>📚 My Library</h1>
+    <nav>
+        <a href="{% url 'book_list' %}">Books</a>
+        |
+        <a href="/about/"> About </a>
+        |
+        {% if user.is_authenticated %}
+        Hello , {{user.username.capitalize}} 
+        <form method="POST" action="{% url 'logout' %}">
+            {% comment %} <a href="{% url 'logout' %}">Logout</a> {% endcomment %}
+            {% comment %} csrf token for security which is required for POST requests that works like a password {% endcomment %}
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
+        {% else %}
+        <a href="{% url 'login' %}">Login</a>
+        {% endif %}
+    </nav>
+    <hr>
+    {% block content %}{% endblock %}
+</body>
+</html>

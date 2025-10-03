@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %} Book Details{% endblock title %}
+{% block content %}
+    <h1>Library - Book Detail</h1>
+    <ul>
+        <h2>{{ book.title }}
+            {% if is_favorite %}   
+                ❤️
+            {% endif %}
+        </h2> 
+        {% comment %} {% if book.cover %}
+            <img src="{{ book.cover.url }}" alt="Cover for {{ book.title }}" style="max-width:200px;" />
+        {% else %}
+            <img src="{% static 'images/default_book_image.jpg' %}" alt="Default Book Cover" style="max-width:200px;" />
+        {% endif %} {% endcomment %}
+
+        <p><strong>Subtitle:</strong> {{ book.subtitle }}</p>
+        <p><strong>Authors:</strong> {{ book.authors.all|join:", " }}</p>
+        <p><strong>Publisher:</strong> {{ book.publisher }}</p>
+        <p><strong>Genres:</strong> {{ book.genres.all|join:", " }}</p>
+        <p><strong>Published Date:</strong> {{ book.publish_date }}</p>
+        <p><strong>Summary:</strong> {{ book.summary }}</p>
+        {% if book.cover %}
+            <img src="{{book.cover.url}}" alt="Book Cover" style="max-width:200px;" />
+        {% endif %}
+        {% if user.is_authenticated %}
+            <form method="POST" action="{% url 'toggle_favorite' book.slug %}">
+                {% csrf_token %}
+                {% comment %} {% if user in book.favorited_by.all.values_list('user', flat=True) %} {% endcomment %}
+                {% if is_favorite %}   
+                    <button type="submit">💔 Remove from Favorites</button>
+                {% else %}
+                    <button type="submit">❤️ Add to Favorites</button>
+                {% endif %}
+            </form>
+
+            <hr style="border: 0.5px solid black; width: 92%;">
+
+            <h3>Leave a Review</h3>
+            <form method="POST" action="{% url 'add_review' book.slug %}">
+                {% csrf_token %}
+                {{ review_form.as_p }}
+                <button type="submit"> Submit Review</button>
+            </form>
+        {% else %}
+            <p><a href="{% url 'login' %}">Login</a> to leave a review or favorite this book!</p>
+        {% endif %}
+
+        </br>
+
+        <hr style="border: 0.5px solid black; width: 92%;">
+        <h3>Reviews:</h3>
+        <ul>
+            {% for review in reviews.all %}
+            
+                <li>
+                    <p><strong>{{review.user.username}}</strong> 
+                    {% for _ in ""|center:review.rating %}⭐️{% endfor %}
+                    </p>
+                    <p>{{review.comment}}</p>
+                </li>
+            {% empty %}
+                <p> No Reviews Yet! </p>
+            {%endfor%}
+        </ul
+    </ul>
+{% endblock content %}
