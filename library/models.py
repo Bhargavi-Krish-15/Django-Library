@@ -19,7 +19,7 @@ class Author(models.Model):
 
     # string representation of the object, which is useful for displaying the object in the Django admin interface and other places.
     def __str__(self):
-        return f" {self.first_name} - {self.last_name} "
+        return f" {self.first_name} {self.last_name} "
 
 
 class Genre(models.Model):
@@ -69,7 +69,9 @@ class Book(models.Model):
         ordering = ['-publish_date', 'title']
 
     def __str__(self):
-        return f" {self.title} - {self.authors} "
+        # return f" {self.title} - {self.authors} "
+        authors = ", ".join(str(a) for a in self.authors.all())
+        return f"{self.title} - {authors}"
 
     def get_absolute_url(self):
         # this is used to get the URL for the detail view of a Book object

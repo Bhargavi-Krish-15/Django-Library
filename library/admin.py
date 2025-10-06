@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Book, Author, Genre, Publisher
+from .models import Book, Author, Genre, Publisher, Review, Favorite
 
 # Register your models here.
 
@@ -22,12 +22,21 @@ class PublisherAdmin(admin.ModelAdmin):
     
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
-    list_display = ('title', 'publisher', 'publish_date')
+    list_display = ('title','publisher', 'publish_date')
     # list filter is used to specify the fields that can be used to filter the list of objects in the admin interface.
     list_filter = ('publisher', 'genres', 'publish_date')   # plural genres
     search_fields = ('title', 'authors__first_name', 'authors__last_name')
     # prepopulated_fields = {'slug': ('title',)}
     # filter_horizontal is used to display a horizontal filter widget for many-to-many relationships in the admin interface.
     # filter_horizontal = ('genres',)              
-    
+
+@admin.register(Review)
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ('user','book', 'rating', 'comment')
+    search_fields = ('book',)
+
+@admin.register(Favorite)
+class FavoriteAdmin(admin.ModelAdmin):
+    list_display = ('book','user',)    
+    search_fields = ('book',)
     
